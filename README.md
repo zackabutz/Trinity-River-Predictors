@@ -1,6 +1,6 @@
 # Trinity River streamflow pipeline
 
-This folder implements the three Trinity River gages in the slide proposal:
+This project contains data from the following stations:
 Rosser (`08062500`), Trinidad (`08062700`), and Goodrich (`08066250`). It uses
 daily mean discharge (USGS parameter `00060`, statistic `00003`) and NOAA
 GHCN-Daily weather. Each row forecasts the next calendar day's mean flow from
@@ -26,9 +26,6 @@ that package without rebuilding the environment:
 .venv/bin/python -m pip uninstall tensorflow
 .venv/bin/python -m pip install -r requirements.txt
 ```
-
-The existing predictions and metrics remain valid; reinstalling only changes
-the TensorFlow package used by later runs.
 
 The retrieval script uses only Python's standard library. Use `--output-dir`
 to place data elsewhere, `--refresh` to redownload cached NOAA station files,
