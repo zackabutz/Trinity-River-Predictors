@@ -82,3 +82,40 @@ Sources: [USGS Water Data API](https://api.waterdata.usgs.gov/docs/ogcapi/),
 [USGS migration guide](https://api.waterdata.usgs.gov/docs/ogcapi/migration/),
 [GHCN-Daily format and units](https://www.ncei.noaa.gov/pub/data/ghcn/daily/readme.txt),
 and [GHCN station CSV layout](https://www.ncei.noaa.gov/pub/data/ghcn/daily/readme-by_station.txt).
+
+## Headwater precipitation comparison
+
+Run `compare_headwater_weather.py` after `retrieve_data.py` to test whether
+upstream rain gauges improve next-day flow forecasts:
+
+```bash
+.venv/bin/python compare_headwater_weather.py
+```
+
+The script downloads four NOAA GHCN-Daily stations, writes their locations and
+actual 2005–2025 precipitation coverage to
+`data/headwater_comparison/stations.csv`, and compares baseline features with
+each fork's rain features separately and all four together. Its default models
+are linear regression and gradient boosting; add `--models random_forest` to
+run the slower forest comparison. Results are in `metrics.csv` and
+`predictions.csv`. A **negative** `mae_change_vs_baseline_cfs` means the added
+station helped. Validation and test rows, split dates, training settings, and
+target observations are identical across scenarios. Inspect validation scores
+when selecting features and use test scores for the final assessment.
+
+The chosen precipitation stations are Antelope (West Fork), Mineral Wells AP
+(Clear Fork), Gainesville 5 ENE (Elm Fork), and Sherman (East Fork). Some nearby
+stations report precipitation but no temperature; this comparison adds only
+rainfall from the headwater stations and retains the original local weather
+features. The Elm station is farther from its source than the others because
+the closer Bonita 7NW station has substantial gaps in this period. Distances
+are straight-line distances to approximate source points, **not** proof that
+each station lies within its fork's watershed. Daily GHCN precipitation may
+be reported for an observer's 24-hour period rather than the same calendar-day
+interval as USGS flow; this remains a retrospective experiment, not an
+operational forecast.
+
+Source locations: [West Fork](https://www.tshaonline.org/handbook/entries/west-fork-of-the-trinity-river),
+[Clear Fork](https://www.tshaonline.org/handbook/entries/clear-fork-of-the-trinity-river),
+[Elm Fork](https://www.tshaonline.org/handbook/entries/elm-fork-of-the-trinity-river),
+[East Fork](https://www.tshaonline.org/handbook/entries/east-fork-of-the-trinity-river).
